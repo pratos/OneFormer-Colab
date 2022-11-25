@@ -202,7 +202,13 @@ class _PanopticPrediction:
         # if isinstance(areas, np.array):
         #     areas = areas.numpy()
         # else:
-        areas = areas.detach().cpu().numpy()
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+        #Additional Info when using cuda
+        if device.type == 'cuda':
+            areas = areas.detach().cpu().numpy()
+        else:
+            areas = areas.numpy()
         sorted_idxs = np.argsort(-areas)
         self._seg_ids, self._seg_areas = segment_ids[sorted_idxs], areas[sorted_idxs]
         self._seg_ids = self._seg_ids.tolist()
