@@ -195,18 +195,15 @@ class _PanopticPrediction:
         del metadata
 
         self._seg = panoptic_seg
-
+        print(panoptic_seg)
+        print(segments_info)
         self._sinfo = {s["id"]: s for s in segments_info}  # seg id -> seg info
         segment_ids, areas = torch.unique(panoptic_seg, sorted=True, return_counts=True)
-        # print(type(areas))
-        # if isinstance(areas, np.array):
-        #     areas = areas.numpy()
-        # else:
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
         #Additional Info when using cuda
         if device.type == 'cuda':
-            areas = areas.detach().cpu().numpy()
+            areas = areas.cpu().data.numpy()
         else:
             areas = areas.numpy()
         sorted_idxs = np.argsort(-areas)
