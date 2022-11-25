@@ -197,9 +197,8 @@ class _PanopticPrediction:
         self._seg = panoptic_seg
         logger.info(panoptic_seg)
         logger.info(segments_info)
-        panoptic_seg_cuda = panoptic_seg.cpu().data.numpy()
         self._sinfo = {s["id"]: s for s in segments_info}  # seg id -> seg info
-        segment_ids, areas = torch.unique(panoptic_seg_cuda, sorted=True, return_counts=True)
+        segment_ids, areas = torch.unique(panoptic_seg.cpu(), sorted=True, return_counts=True)
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
         #Additional Info when using cuda
